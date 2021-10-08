@@ -21,4 +21,26 @@ public interface IUserService extends IService<User> {
      */
     List<User> getAllUsers();
 
+    /**
+     * 分页查询
+     * @param current 当前页
+     * @param size 每页条数
+     * @return
+     */
+    List<User> pagelist(int current, int size);
+
+    /**
+     * 插入
+     * @param user
+     * @return
+     */
+    int insertUser(User user);
+
+    /**
+     * 更新
+     * @param user
+     * @return
+     */
+    int updateUser(User user);
+
 }

@@ -25,9 +25,50 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    /**
+     * 查询所有
+     * @return
+     */
     @RequestMapping("/test")
     public List<User> Test(){
         return userService.getAllUsers();
     }
+
+    /**
+     * 分页查询
+     * @return
+     */
+    @RequestMapping("/pageTest")
+    public List<User> pageTest(){
+        return userService.pagelist(2,2);
+    }
+
+    /**
+     * 插入测试
+     * @return
+     */
+    @RequestMapping("/insertTest")
+    public int insertTest(){
+        User user = new User();
+        user.setId(5);
+        user.setUsername("lsy5");
+        user.setPassword("32823");
+        return userService.insertUser(user);
+    }
+
+    /**
+     * 更新测试
+     * @return
+     */
+    @RequestMapping("/updateTest")
+    public int updateTest(){
+        User user = new User();
+        user.setId(5);
+        user.setUsername("lsy4s");
+        user.setPassword("sdfjdsf");
+        return userService.updateUser(user);
+    }
+
+
 
 }

@@ -1,11 +1,11 @@
 package com.example.springcloudclient.jdbctest.model.auto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 /**
  * <p>
@@ -30,6 +30,16 @@ public class User extends Model {
 
     @TableField("PASSWORD")
     private String password;
+
+    @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
+    private Date create_time;
+
+    @TableField(value = "UPDATE_TIME", fill = FieldFill.UPDATE)
+    private Date update_time;
+
+    @Version
+    @TableField(value = "VERSION",fill = FieldFill.INSERT)
+    private Integer version;
 
 
 }

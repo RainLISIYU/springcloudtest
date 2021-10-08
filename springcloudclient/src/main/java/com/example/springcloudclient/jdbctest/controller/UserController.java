@@ -66,6 +66,7 @@ public class UserController {
         user.setId(5);
         user.setUsername("lsy4s");
         user.setPassword("sdfjdsf");
+        user.setVersion(1);
         return userService.updateUser(user);
     }
 

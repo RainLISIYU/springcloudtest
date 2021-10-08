@@ -38,7 +38,7 @@ public class User extends Model {
     private Date update_time;
 
     @Version
-    @TableField(value = "VERSION",fill = FieldFill.INSERT)
+    @TableField(fill = FieldFill.INSERT)
     private Integer version;
 
 

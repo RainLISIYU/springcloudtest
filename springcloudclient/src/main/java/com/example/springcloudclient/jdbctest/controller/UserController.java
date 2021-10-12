@@ -19,7 +19,7 @@ import java.util.List;
  * @since 2021-10-08
  */
 @RestController
-@RequestMapping("//user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired

@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper =  true)
-@TableName("platform_heart")
+@TableName("platform_heartbeat")
 public class PlatformHeartbeat extends Model {
 
     private static final long serialVersionUID = 1L;

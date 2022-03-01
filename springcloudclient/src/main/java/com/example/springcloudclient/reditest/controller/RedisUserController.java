@@ -44,15 +44,28 @@ public class RedisUserController {
         String platformId = String.valueOf(parameters.get("platformId"));
         String linkStatus = String.valueOf(parameters.get("linkStatus"));
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HHmmss");
-        String currentTime = String.valueOf(format.format(new Date()));
+        String currentTime = format.format(new Date());
         PlatformHeartbeat platformHeartbeat = new PlatformHeartbeat();
-        platformHeartbeat.setId(1);
+        int id = getIdFromRedis(platformId);
+        platformHeartbeat.setId(id);
         platformHeartbeat.setPlatformId(platformId);
         platformHeartbeat.setLinkStatus(linkStatus);
         platformHeartbeat.setDataTime(currentTime);
         redisTemplate.opsForValue().set(platformId, platformHeartbeat);
         int num = platformHeartbeatService.insertPlatformHeartbeat(platformHeartbeat);
         return platformId + " 心跳检测成功 " + num;
+    }
+
+    @RequestMapping("/getPlatformHeartbeat")
+    public PlatformHeartbeat getPlatformHeartbeat(@RequestParam String platformId){
+        PlatformHeartbeat platformHeartbeat = (PlatformHeartbeat) redisTemplate.opsForValue().get(platformId);
+        return platformHeartbeat;
+    }
+
+    private int getIdFromRedis(String platformId){
+        Object object = redisTemplate.opsForValue().get(platformId);
+        int id = object == null ? 0 : ((PlatformHeartbeat) object).getId();
+        return id;
     }
 
 }

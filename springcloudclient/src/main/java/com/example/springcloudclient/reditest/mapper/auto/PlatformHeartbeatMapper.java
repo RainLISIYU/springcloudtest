@@ -13,5 +13,11 @@ import com.example.springcloudclient.reditest.model.auto.PlatformHeartbeat;
  **/
 public interface PlatformHeartbeatMapper extends IService<PlatformHeartbeat> {
 
+    /**
+     * 报错心跳信息
+     * @param platformHeartbeat
+     * @return
+     */
+    int saveHeartBeat(PlatformHeartbeat platformHeartbeat);
 
 }

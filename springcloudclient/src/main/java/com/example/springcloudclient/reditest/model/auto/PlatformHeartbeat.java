@@ -30,7 +30,7 @@ public class PlatformHeartbeat extends Model {
     @TableField("link_status")
     public String linkStatus;
 
-    @TableField("data_time")
+    @TableField("date_time")
     public String dataTime;
 
 }

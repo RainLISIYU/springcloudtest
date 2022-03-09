@@ -4,6 +4,7 @@ import com.example.springcloudclient.reditest.mapper.auto.PlatformHeartbeatMappe
 import com.example.springcloudclient.reditest.model.auto.PlatformHeartbeat;
 import com.example.springcloudclient.reditest.service.PlatformHeartbeatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,12 +20,29 @@ public class PlatformHeartbeatServiceImpl implements PlatformHeartbeatService {
     @Autowired
     private PlatformHeartbeatMapper platformHeartbeatMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public int insertPlatformHeartbeat(PlatformHeartbeat platformHeartbeat) {
 
-        boolean flag = platformHeartbeatMapper.save(platformHeartbeat);
-        return flag ? 1 : 0;
+        Object heartBeat = redisTemplate.opsForValue().get(platformHeartbeat.getPlatformId());
+        int flag = 0;
+        if (heartBeat != null){
+            flag = platformHeartbeatMapper.updateById(platformHeartbeat);
+        }else{
+            flag = platformHeartbeatMapper.insert(platformHeartbeat);
+        }
+        redisTemplate.opsForValue().set(platformHeartbeat.getPlatformId(), platformHeartbeat);
+        return flag;
 
+    }
+
+    @Override
+    public Integer getMaxBeatId() {
+        Integer maxId = platformHeartbeatMapper.getMaxBeatId();
+        maxId = maxId == null ? 0 : maxId;
+        return maxId;
     }
 
 }

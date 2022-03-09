@@ -2,6 +2,7 @@ package com.example.springcloudclient.kafkatest.simple;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class KafkaComsumerEz {
 
     @KafkaListener(groupId = "test", topics = {"topic1","topic2"})
-    public void onMessage1(ConsumerRecord<?, ?> record){
+    public void onMessage1(ConsumerRecord<?, ?> record, Acknowledgment ack){
         System.out.println("简单消费："+record.topic() + "-" + record.partition() + "-" + record.value());
     }
 }

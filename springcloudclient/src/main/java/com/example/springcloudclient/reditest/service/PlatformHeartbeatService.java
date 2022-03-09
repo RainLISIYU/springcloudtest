@@ -18,4 +18,10 @@ public interface PlatformHeartbeatService {
      */
     int insertPlatformHeartbeat(PlatformHeartbeat platformHeartbeat);
 
+    /**
+     * 获取最大id
+     * @return
+     */
+    Integer getMaxBeatId();
+
 }

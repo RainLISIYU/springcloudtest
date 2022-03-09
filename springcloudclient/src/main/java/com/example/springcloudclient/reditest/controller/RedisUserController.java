@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * SpringCloudTest
@@ -35,7 +36,6 @@ public class RedisUserController {
         map.put("username",message);
         map.put("userRole","admin");
         System.out.println(redisTemplate.opsForValue().get("key1"));
-        //System.out.println(redisTemplate.opsForValue().increment("key1"));
         return "Insert Success !" + redisTemplate.opsForValue().get("key1");
     }
 
@@ -45,13 +45,20 @@ public class RedisUserController {
         String linkStatus = String.valueOf(parameters.get("linkStatus"));
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HHmmss");
         String currentTime = format.format(new Date());
-        PlatformHeartbeat platformHeartbeat = new PlatformHeartbeat();
-        int id = getIdFromRedis(platformId);
-        platformHeartbeat.setId(id);
-        platformHeartbeat.setPlatformId(platformId);
-        platformHeartbeat.setLinkStatus(linkStatus);
-        platformHeartbeat.setDataTime(currentTime);
-        redisTemplate.opsForValue().set(platformId, platformHeartbeat);
+        PlatformHeartbeat platformHeartbeat = null;
+        Object obj = redisTemplate.opsForValue().get(platformId);
+        if (obj == null){
+            platformHeartbeat = new PlatformHeartbeat();
+            int id = getIdFromRedis(platformId);
+            platformHeartbeat.setId(id);
+            platformHeartbeat.setPlatformId(platformId);
+            platformHeartbeat.setLinkStatus(linkStatus);
+            platformHeartbeat.setDataTime(currentTime);
+        }else{
+            platformHeartbeat = (PlatformHeartbeat) obj;
+            platformHeartbeat.setLinkStatus(linkStatus);
+            platformHeartbeat.setDataTime(currentTime);
+        }
         int num = platformHeartbeatService.insertPlatformHeartbeat(platformHeartbeat);
         return platformId + " 心跳检测成功 " + num;
     }
@@ -63,9 +70,33 @@ public class RedisUserController {
     }
 
     private int getIdFromRedis(String platformId){
-        Object object = redisTemplate.opsForValue().get(platformId);
-        int id = object == null ? 0 : ((PlatformHeartbeat) object).getId();
-        return id;
+        Object object = redisTemplate.opsForValue().get("platform_heartbeat_id");
+        if (object == null){
+            Integer maxId = platformHeartbeatService.getMaxBeatId();
+            redisTemplate.opsForValue().set("platform_heartbeat_id", maxId);
+            object = maxId+1;
+        }
+        redisTemplate.opsForValue().increment("platform_heartbeat_id");
+        return (Integer) object;
+    }
+
+    public static void main(String[] args) {
+        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(8);
+        ThreadLocal threadLocal = new ThreadLocal();
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2,4,2L, TimeUnit.SECONDS,
+                queue, new ThreadPoolExecutor.CallerRunsPolicy());
+        for (int i = 0; i < 18; i++){
+            threadPoolExecutor.execute(()->{
+                System.out.println("thread " + Thread.currentThread().getName() + " is running!");
+                try {
+                    Thread.sleep(3000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            System.out.println("线程队列长度：" + queue.size());
+        }
+        threadPoolExecutor.shutdown();
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class KafkaComsumerEz {
 
     @KafkaListener(groupId = "test", topics = {"topic1","topic2"})
-    public void onMessage1(ConsumerRecord<?, ?> record, Acknowledgment ack){
+    public void onMessage1(ConsumerRecord<?, ?> record){
         System.out.println("简单消费："+record.topic() + "-" + record.partition() + "-" + record.value());
     }
 }

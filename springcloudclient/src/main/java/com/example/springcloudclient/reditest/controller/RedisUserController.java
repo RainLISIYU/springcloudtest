@@ -69,6 +69,12 @@ public class RedisUserController {
         return platformHeartbeat;
     }
 
+    @RequestMapping("/syncPlatformRedis")
+    public String syncPlatformRedis(){
+        int size = platformHeartbeatService.syncPlatformRedis();
+        return size + "项数据同步成功";
+    }
+
     private int getIdFromRedis(String platformId){
         Object object = redisTemplate.opsForValue().get("platform_heartbeat_id");
         if (object == null){

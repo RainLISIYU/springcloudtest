@@ -24,4 +24,10 @@ public interface PlatformHeartbeatService {
      */
     Integer getMaxBeatId();
 
+    /**
+     * 同步redis缓存
+     * @return
+     */
+    int syncPlatformRedis();
+
 }

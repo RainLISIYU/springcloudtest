@@ -20,7 +20,7 @@ spring:
     restart:
       enabled: true
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: 120.25.106.163:9093
     producer:
       retries: 0
       batch-size: 16384
@@ -39,7 +39,7 @@ spring:
     listener:
       missing-topics-fatal: false
   redis:
-    host: localhost
+    host: 120.25.106.163
     port: 6379
     database: 0
     timeout: 1800000
@@ -49,6 +49,7 @@ spring:
         max-wait: -1
         max-idle: 5
         min-idle: 0
+    password: lsy19980104
 
 mybatis-plus:
   configuration:

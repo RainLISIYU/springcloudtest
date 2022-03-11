@@ -1,11 +1,14 @@
 package com.example.springcloudclient.reditest.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springcloudclient.reditest.mapper.auto.PlatformHeartbeatMapper;
 import com.example.springcloudclient.reditest.model.auto.PlatformHeartbeat;
 import com.example.springcloudclient.reditest.service.PlatformHeartbeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * SpringCloudTest
@@ -43,6 +46,17 @@ public class PlatformHeartbeatServiceImpl implements PlatformHeartbeatService {
         Integer maxId = platformHeartbeatMapper.getMaxBeatId();
         maxId = maxId == null ? 0 : maxId;
         return maxId;
+    }
+
+    @Override
+    public int syncPlatformRedis() {
+        QueryWrapper<PlatformHeartbeat> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id","platform_id", "link_status", "date_time");
+        List<PlatformHeartbeat> platformHeartbeats = platformHeartbeatMapper.selectList(queryWrapper);
+        for (PlatformHeartbeat platformHeartbeat : platformHeartbeats){
+            redisTemplate.opsForValue().set(platformHeartbeat.getPlatformId(), platformHeartbeat);
+        }
+        return platformHeartbeats.size();
     }
 
 }

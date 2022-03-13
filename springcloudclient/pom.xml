@@ -94,20 +94,6 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-        <!--redis集成-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>2.6.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-
-
         <!--热部署-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

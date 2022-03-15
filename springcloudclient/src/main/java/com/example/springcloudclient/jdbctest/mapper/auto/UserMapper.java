@@ -2,6 +2,7 @@ package com.example.springcloudclient.jdbctest.mapper.auto;
 
 import com.example.springcloudclient.jdbctest.model.auto.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @author astupidcoder
  * @since 2021-10-08
  */
+@Repository
 public interface UserMapper extends BaseMapper<User> {
 
     /**

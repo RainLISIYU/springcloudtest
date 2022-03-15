@@ -4,11 +4,14 @@ package com.example.springcloudclient.jdbctest.controller;
 import com.example.springcloudclient.jdbctest.model.auto.User;
 import com.example.springcloudclient.jdbctest.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * <p>
@@ -25,13 +28,20 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 查询所有
      * @return
      */
     @RequestMapping("/test")
     public List<User> Test(){
-        return userService.getAllUsers();
+        List<User> userList = userService.getAllUsers();
+        Optional<User> user = userList.stream().sorted((User u1, User u2) -> u2.getId() - u1.getId()).findFirst();
+        Integer id = user.get().getId();
+        redisTemplate.opsForValue().set("max_user_id", id);
+        return userList;
     }
 
     /**
@@ -50,9 +60,11 @@ public class UserController {
     @RequestMapping("/insertTest")
     public int insertTest(){
         User user = new User();
-        user.setId(5);
-        user.setUsername("lsy5");
-        user.setPassword("32823");
+        Integer id = (Integer) redisTemplate.opsForValue().get("max_user_id")+1;
+        redisTemplate.opsForValue().increment("max_user_id");
+        user.setId(id);
+        user.setUsername("lsy"+id);
+        user.setPassword(new Random(1000000).nextInt()+"");
         return userService.insertUser(user);
     }
 

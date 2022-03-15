@@ -9,6 +9,8 @@ import com.example.springcloudclient.jdbctest.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,8 +43,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int insertUser(User user) {
-        return userMapper.insert(user);
+        int num = userMapper.insert(user);
+        System.out.println(user.getUsername() + " user insert success "+ num);
+        throw new RuntimeException();
     }
 
     @Override

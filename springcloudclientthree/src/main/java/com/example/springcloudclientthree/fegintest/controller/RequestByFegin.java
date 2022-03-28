@@ -1,9 +1,7 @@
 package com.example.springcloudclientthree.fegintest.controller;
 
-import com.example.springcloudclientthree.fegintest.server.FeginTest;
+import com.example.springcloudclientthree.fegintest.server.FeignTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,11 +19,21 @@ import java.util.Map;
 @RequestMapping("/feignTest")
 public class RequestByFegin{
 
+
+    private FeignTest feignTest;
+
     @Autowired
-    private FeginTest feignTest;
+    public void setFeignTest(FeignTest feignTest) {
+        this.feignTest = feignTest;
+    }
 
     @RequestMapping("/getRequest")
     public String savePlatformHeart(@RequestParam Map<String, Object> parameters) {
         return feignTest.savePlatformHeart(parameters);
+    }
+
+    @RequestMapping("/userList")
+    public String getUserList(){
+        return feignTest.getUserList();
     }
 }

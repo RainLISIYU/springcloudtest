@@ -5,9 +5,7 @@ import com.example.springcloudclient.jdbctest.model.auto.User;
 import com.example.springcloudclient.jdbctest.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +33,9 @@ public class UserController {
      * 查询所有
      * @return
      */
-    @RequestMapping("/test")
-    public List<User> Test(){
-        List<User> userList = userService.getAllUsers();
+    @RequestMapping("/test/{page}/{num}")
+    public List<User> Test(@PathVariable Integer page, @PathVariable Integer num){
+        List<User> userList = userService.pagelist(page, num);
         Optional<User> user = userList.stream().sorted((User u1, User u2) -> u2.getId() - u1.getId()).findFirst();
         Integer id = user.get().getId();
         redisTemplate.opsForValue().set("max_user_id", id);
@@ -58,14 +56,17 @@ public class UserController {
      * @return
      */
     @RequestMapping("/insertTest")
-    public int insertTest(){
+    public Integer insertTest(){
         User user = new User();
         Integer id = (Integer) redisTemplate.opsForValue().get("max_user_id")+1;
-        redisTemplate.opsForValue().increment("max_user_id");
         user.setId(id);
         user.setUsername("lsy"+id);
-        user.setPassword(new Random(1000000).nextInt()+"");
-        return userService.insertUser(user);
+        user.setPassword(new Random(System.nanoTime()).nextInt()+"");
+        Integer insertNum = userService.insertUser(user);
+        if (insertNum != 0){
+            redisTemplate.opsForValue().increment("max_user_id");
+        }
+        return insertNum;
     }
 
     /**
@@ -73,7 +74,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/updateTest")
-    public int updateTest(){
+    public Integer updateTest(){
         User user = new User();
         user.setId(5);
         user.setUsername("lsy4s");
@@ -82,6 +83,17 @@ public class UserController {
         return userService.updateUser(user);
     }
 
+    /**
+     * 更新测试
+     * @return
+     */
+    @PostMapping("/updateUser")
+    public Integer updateTest(@RequestBody List<User> users){
+        User user = users.get(0);
+        Integer id = user.getId();
+        String name = user.getUsername();
+        return userService.updateUser(user);
+    }
 
 
 }

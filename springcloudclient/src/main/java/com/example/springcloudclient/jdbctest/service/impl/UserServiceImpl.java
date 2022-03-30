@@ -47,7 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public int insertUser(User user) {
         int num = userMapper.insert(user);
         System.out.println(user.getUsername() + " user insert success "+ num);
-        throw new RuntimeException();
+        return num;
     }
 
     @Override

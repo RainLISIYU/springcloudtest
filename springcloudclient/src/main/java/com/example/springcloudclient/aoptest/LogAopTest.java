@@ -1,13 +1,14 @@
 package com.example.springcloudclient.aoptest;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -27,7 +28,7 @@ public class LogAopTest {
 
     private final Logger logger = LoggerFactory.getLogger(LogAopTest.class);
 
-    @Pointcut("execution(public * com.example.springcloudclient..*.*(..))")
+    @Pointcut("execution(public * com.example.springcloudclient..*.controller..*.*(..))")
     public void LogController(){}
 
     @Before("LogController()")
@@ -58,6 +59,35 @@ public class LogAopTest {
         }
         logger.info(requestLog.toString());
         logger.info("==========日志前置切入结束===========");
+    }
+
+    /**
+     * 后置通知
+     * @param joinPoint
+     */
+    @After("LogController()")
+    public void logAfterAdvice(JoinPoint joinPoint){
+        try{
+            String name = joinPoint.getSignature().getName();
+            logger.info(System.currentTimeMillis()+" 后置通知:"+name);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+        }
+
+    }
+
+    @Around("LogController()")
+    public Object logAroundAdvice(ProceedingJoinPoint proceedingJoinPoint){
+
+        logger.info(System.currentTimeMillis()+" 环绕前置通知===");
+        try {
+            Object proceed = proceedingJoinPoint.proceed();
+            logger.info(System.currentTimeMillis()+" 环绕后置通知，返回结果"+proceed);
+            return proceed;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

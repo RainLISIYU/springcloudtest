@@ -25,14 +25,14 @@ public interface FeignTest {
      * @param parameters
      * @return
      */
-    @RequestMapping("/redisTest/savePlatformHeartbeat")
+    @RequestMapping("/redisTest/savePlatformHeartbeat/{page}/{num}")
     String savePlatformHeart(@RequestParam Map<String, Object> parameters);
 
     /**
      * 请求用户查询接口
      * @return
      */
-    @RequestMapping("/user/test")
+    @RequestMapping("/user/test/{page}/{num}")
     String getUserList();
 
 }

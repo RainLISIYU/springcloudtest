@@ -18,6 +18,7 @@ public class ThreadTestEight {
             e.printStackTrace();
         }
         thread2.start();
+        System.out.println("12345".substring(2,3));
     }
 }
 

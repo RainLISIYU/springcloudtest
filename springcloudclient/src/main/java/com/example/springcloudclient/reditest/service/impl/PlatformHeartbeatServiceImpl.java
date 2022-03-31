@@ -1,5 +1,6 @@
 package com.example.springcloudclient.reditest.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springcloudclient.reditest.mapper.auto.PlatformHeartbeatMapper;
 import com.example.springcloudclient.reditest.model.auto.PlatformHeartbeat;
@@ -58,6 +59,13 @@ public class PlatformHeartbeatServiceImpl implements PlatformHeartbeatService {
             redisTemplate.opsForValue().set(platformHeartbeat.getPlatformId(), platformHeartbeat);
         }
         return platformHeartbeats.size();
+    }
+
+    @Override
+    public List<PlatformHeartbeat> getAllPlatHeart() {
+        QueryWrapper<PlatformHeartbeat> wrapper = new QueryWrapper<>();
+        List<PlatformHeartbeat> platformHeartbeatList = platformHeartbeatMapper.selectList(wrapper);
+        return platformHeartbeatList;
     }
 
 }

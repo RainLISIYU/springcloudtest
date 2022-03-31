@@ -2,6 +2,8 @@ package com.example.springcloudclient.reditest.service;
 
 import com.example.springcloudclient.reditest.model.auto.PlatformHeartbeat;
 
+import java.util.List;
+
 /**
  * SpringCloudTest
  * 平台心跳service
@@ -29,5 +31,11 @@ public interface PlatformHeartbeatService {
      * @return
      */
     int syncPlatformRedis();
+
+    /**
+     * 获取所有接入点心跳
+     * @return
+     */
+    List<PlatformHeartbeat> getAllPlatHeart();
 
 }

@@ -7,9 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -38,6 +36,8 @@ public class RedisUserController {
         System.out.println(redisTemplate.opsForValue().get("key1"));
         return "Insert Success !" + redisTemplate.opsForValue().get("key1");
     }
+
+
 
     @RequestMapping("/savePlatformHeartbeat")
     public String savePlatformHeartbeat(@RequestParam Map<String, Object> parameters){
@@ -73,6 +73,29 @@ public class RedisUserController {
     public String syncPlatformRedis(){
         int size = platformHeartbeatService.syncPlatformRedis();
         return size + "项数据同步成功";
+    }
+
+    @RequestMapping("/getAllPlatHeart")
+    public List<PlatformHeartbeat> getAllPlatHeart(){
+        List<PlatformHeartbeat> platformHeartbeatList;
+        Object obj = redisTemplate.opsForValue().get("platHeartList");
+        if (obj != null){
+            platformHeartbeatList = (List<PlatformHeartbeat>) obj;
+        }else{
+            platformHeartbeatList = platformHeartbeatService.getAllPlatHeart();
+            redisTemplate.opsForValue().set("platHeartList", platformHeartbeatList);
+        }
+        return platformHeartbeatList;
+    }
+
+    @RequestMapping("/cleanPlatHeart")
+    public Boolean cleanPlatHeart(){
+        try{
+            redisTemplate.delete("platHeartList");
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     private int getIdFromRedis(String platformId){

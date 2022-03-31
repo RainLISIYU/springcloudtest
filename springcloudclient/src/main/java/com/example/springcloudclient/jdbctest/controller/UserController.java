@@ -36,6 +36,16 @@ public class UserController {
     @RequestMapping("/test/{page}/{num}")
     public List<User> Test(@PathVariable Integer page, @PathVariable Integer num){
         List<User> userList = userService.pagelist(page, num);
+        return userList;
+    }
+
+    /**
+     * 查询所有
+     * @return
+     */
+    @RequestMapping("/getAllUsers")
+    public List<User> getAllUsers(){
+        List<User> userList = userService.getAllUsers();
         Optional<User> user = userList.stream().sorted((User u1, User u2) -> u2.getId() - u1.getId()).findFirst();
         Integer id = user.get().getId();
         redisTemplate.opsForValue().set("max_user_id", id);

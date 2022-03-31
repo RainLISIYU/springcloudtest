@@ -50,6 +50,9 @@ spring:
         max-idle: 5
         min-idle: 0
     password: lsy19980104
+    sentinel:
+      master: mymaster
+      nodes: 120.25.106.163:26379,120.25.106.163:26378
 
 mybatis-plus:
   configuration:

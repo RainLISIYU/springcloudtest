@@ -23,7 +23,8 @@ public class KafkaProducerEz {
 
     @RequestMapping("/kafka/normal/{message}")
     public void sendMessage1(@PathVariable("message") String normalMessage){
-        kafkaTemplate.send("topic1", normalMessage);
+        kafkaTemplate.send("test3", 0,"1", normalMessage+"1");
+        kafkaTemplate.send("test3", 1, "2", normalMessage+"2");
         try {
             TimeUnit.MILLISECONDS.sleep(5);
         } catch (InterruptedException e) {

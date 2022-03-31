@@ -15,8 +15,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaComsumerEz {
 
-    @KafkaListener(groupId = "test", topics = {"topic1","topic2"})
+    @KafkaListener(groupId = "test", topics = {"topic1","topic2","test3"})
     public void onMessage1(ConsumerRecord<?, ?> record){
-        System.out.println("简单消费："+record.topic() + "-" + record.partition() + "-" + record.value());
+        System.out.println("简单消费者1："+record.topic() + "-" + record.partition() + "-" + record.value());
+    }
+
+    @KafkaListener(groupId = "test", topics = {"test3"})
+    public void onMessage2(ConsumerRecord<?, ?> record){
+        System.out.println("简单消费者2："+record.topic() + "-" + record.partition() + "-" + record.value());
     }
 }

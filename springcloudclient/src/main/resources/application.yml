@@ -70,3 +70,12 @@ kafka:
     group-id: topicGroupId
     topic-name:
       topicone
+
+zookeeper:
+  address: 120.25.106.163:2181
+  timeout: 3000
+
+logging:
+  config: classpath:log/logback-spring.xml
+  file:
+    path: F:/logback

@@ -35,6 +35,9 @@ public class UserController {
      */
     @RequestMapping("/test/{page}/{num}")
     public List<User> Test(@PathVariable Integer page, @PathVariable Integer num){
+        if(page == -1){
+            throw new RuntimeException("page number error!");
+        }
         List<User> userList = userService.pagelist(page, num);
         return userList;
     }

@@ -7,3 +7,6 @@ server:
 spring:
   application:
     name: service-hi1
+feign:
+  circuitbreaker:
+    enabled: true

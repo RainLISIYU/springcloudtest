@@ -2,6 +2,7 @@ package com.example.springcloudclientthree.fegintest.controller;
 
 import com.example.springcloudclientthree.fegintest.server.FeignTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,8 +33,9 @@ public class RequestByFegin{
         return feignTest.savePlatformHeart(parameters);
     }
 
-    @RequestMapping("/userList")
-    public String getUserList(){
-        return feignTest.getUserList();
+    @RequestMapping("/userList/{page}/{num}")
+    public String getUserList(@PathVariable Integer page, @PathVariable Integer num){
+        String result = feignTest.getUserList(page, num);
+        return result;
     }
 }
